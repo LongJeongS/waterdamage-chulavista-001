@@ -4879,6 +4879,47 @@ body.look-plain .cg-more-list li { border-bottom: 1px solid var(--border); }
 body.look-plain .cg-more-list a { display: block; padding: 14px 0; font-size: 17px; font-weight: 600; color: var(--color-primary); }
 body.look-plain .cg-more-list a:hover { text-decoration: underline; }
 /* review-round-nov-2026:end */
+/* legibility-nov-2026:start */
+/* Legibility fixes 2026-11-27, from what tools/legibility_check.py measured on the first plain sites. One marked chunk
+   so older tests can compare "today minus these fixes" (tests/legibility_round.py); every rule is scoped to the plain look.
+   Numbers band: where the brand accent is under 3:1 on the brand colour the assembler adds stats-figure-plain and the
+   figures are white (Naples coral on green measured 2.3:1). A readable accent keeps its colour. */
+body.look-plain.stats-brand-band.stats-figure-plain #stats-bar .stat-value { color: #fff; }
+/* Call-to-action band: the paragraph sits inside .cta-band-inner, so the rule above for "#cta-band > .container > p"
+   never reached it and it stayed at the classic 75% white (4.1 to 4.4:1 over the tinted photo). This is the intended 92%. */
+body.look-plain #cta-band .cta-band-sub { color: rgba(255,255,255,0.92); }
+/* Blog post top section: the breadcrumb and the date line are full white, and a dark scrim sits behind the text block
+   (it fades in over the block's top padding), so a pale photo cannot wash them out: 30% black keeps white text at 4.5:1 or better even where the photo is pure
+   white over these brand colours. The photo keeps its 45%. */
+body.look-plain .post-hero-overlay { background-image: linear-gradient(180deg, rgba(0,0,0,0) 0, rgba(0,0,0,0.3) 40px, rgba(0,0,0,0.3) 100%); }
+body.look-plain .post-breadcrumb, body.look-plain .post-breadcrumb a, body.look-plain .post-meta { color: #fff; }
+/* Photo service cards (photo_overlay): the dark fade hangs from the card title, so however long the card's text is the
+   title and the text sit on it. It replaces the fade that was fixed at 20% to 72% of the card's height (a long text
+   pushed the title up into its light part: 2.7:1 on a pale photo). The icon tile stays above it. */
+body.look-plain #services.services-variant-photo-overlay .svc-photo::after { background: rgba(10,22,30,0.05); }
+body.look-plain #services.services-variant-photo-overlay .service-card h3::before { content: ""; position: absolute; z-index: -1; left: -22px; right: -22px; top: -110px; height: 1200px; pointer-events: none; background: linear-gradient(180deg, rgba(10,22,30,0) 0, rgba(10,22,30,0.5) 110px, rgba(10,22,30,0.88) 180px); }
+body.look-plain #services.services-variant-photo-overlay .service-icon { z-index: 2; }
+/* Heading faces that are hard to read small (config/font_traits.json: small-bodied like Cormorant Garamond, whose 17px
+   reads like 12.8px, or condensed like Bebas Neue): the assembler adds heading-face-small and the headings of 18px and
+   under, the contents and sidebar titles, the footer brand name and the logo kicker are set in the body font, bold.
+   Larger headings keep the heading face. */
+body.look-plain.heading-face-small #services:not(.services-variant-photo-overlay) .service-card h3, body.look-plain.heading-face-small .area-service-card h3, body.look-plain.heading-face-small .vp-text h3, body.look-plain.heading-face-small .vp-text h4, body.look-plain.heading-face-small .vp-card h3, body.look-plain.heading-face-small .process-step h3, body.look-plain.heading-face-small .application-item h3, body.look-plain.heading-face-small .related-card h3, body.look-plain.heading-face-small .cg-faq-item h3, body.look-plain.heading-face-small .blog-card-title, body.look-plain.heading-face-small .contact-info-header h2, body.look-plain.heading-face-small .sidebar-card h3, body.look-plain.heading-face-small .cg-toc-title, body.look-plain.heading-face-small #site-footer .footer-brand-link, body.look-plain.heading-face-small #site-nav .nav-logo .nav-logo-kicker { font-family: var(--font-body); font-weight: 700; }
+/* Footer disclaimer: 14px on both footers (it was 13.5px, and 13px on the light footer: one paragraph on every page,
+   which alone put 7 to 9% of a referral site's characters under 14px). */
+body.look-plain .footer-disclaimer, body.look-plain #site-footer.footer-variant-light-minimal .footer-disclaimer { font-size: 14px; }
+/* Blog pages toggle `is-open` (templates/blog-*.html); open the menu and the dropdown on it too. */
+body.look-plain .nav-mobile-menu.is-open { display: flex; }
+body.look-plain .nav-dropdown.is-open .nav-dropdown-menu { opacity: 1; pointer-events: auto; transform: translateY(0); visibility: visible; }
+/* legibility-nov-2026:end */
+/* template-round-nov-2026:start */
+/* ── Template round 2026-11-27 (tests/test_plain_template_round.py; the start and end markers let older tests set this
+   chunk aside: tests/template_round.py) ── */
+/* The open phone menu sits inside the fixed top bar, so a menu taller than the screen was cut off with no way to reach
+   its last links and button (Naples, Bakersfield on a 390x667 phone). It now scrolls inside what is left of the screen
+   under the bar (and the strip, where a site shows one), on every top bar and on the blog pages, whose script opens it
+   with `is-open`. The dynamic viewport height keeps the last button above a phone browser's toolbar. */
+body.look-plain #site-nav .nav-mobile-menu.open, body.look-plain #site-nav .nav-mobile-menu.is-open { max-height: calc(100vh - var(--plain-bar-h) - var(--plain-strip-h)); max-height: calc(100dvh - var(--plain-bar-h) - var(--plain-strip-h)); overflow-y: auto; overscroll-behavior: contain; }
+/* template-round-nov-2026:end */
 /* === hero-photo-form === */
 /* Top section: photo_form (the full-width photo with the plain look's left-heavy darkening; headline, text and phone on the left, a white
    quote-form card on the right over the photo; on phones the text comes first, then the card).
@@ -5077,7 +5118,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       </ul>
       <div class="nav-actions">
         <a href="tel:+16195550100" class="nav-phone" aria-label="Call us"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.15 12 19.79 19.79 0 011.1 3.18 2 2 0 013.1 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>+1 (619) 555-0100</a>
-        <a href="/contact/" class="btn btn-primary">Request Help</a>
+        <a href="/contact/" class="btn btn-primary">Request Help Now</a>
       </div>
       <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" onclick="toggleMenu(this)"><span></span><span></span><span></span></button>
     </nav>
@@ -5094,7 +5135,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
     <a href="/cost-guides/water-damage-repair-cost-per-square-foot/" onclick="closeMenu()">Price Guide</a>
     <a href="/contact/" onclick="closeMenu()">Contact</a>
     <a href="tel:+16195550100" onclick="closeMenu()" style="display:flex;align-items:center;gap:8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.15 12 19.79 19.79 0 011.1 3.18 2 2 0 013.1 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>+1 (619) 555-0100</a>
-    <a href="/contact/" class="btn btn-primary mobile-cta" onclick="closeMenu()">Request Help</a>
+    <a href="/contact/" class="btn btn-primary mobile-cta" onclick="closeMenu()">Request Help Now</a>
   </nav>
 </header>
 
@@ -5104,11 +5145,11 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
   <section class="area-hero" style="background-image:url('/images/hero_bg.webp');">
     <div class="container">
       <span class="section-eyebrow">Service Area</span>
-      <h1>Water Damage Repair in La Mesa, From Wet Drywall to a Finished Room</h1>
+      <h1>Water Damage Restoration in La Mesa</h1>
       <p class="area-coords" aria-hidden="true">32.7678&deg; N &middot; -117.0231&deg; W</p>
       <p>Bungalows, crawl spaces and hillside runoff, dried and put back right.</p>
       <div class="hero-ctas">
-        <a href="/contact/" class="btn btn-primary">Request Help</a>
+        <a href="/contact/" class="btn btn-primary">Request Help Now</a>
         <p><a href="tel:+16195550100" class="hero-phone"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.15 12 19.79 19.79 0 011.1 3.18 2 2 0 013.1 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>+1 (619) 555-0100</a></p>
       </div>
       <p class="referral-line">We'll put you in touch with a local contractor.</p>
@@ -5122,16 +5163,16 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
         <div>
           <span class="section-eyebrow">La Mesa</span>
           <h2 class="section-title" style="max-width:none;">Chula Vista Restoration Co. in La Mesa</h2>
-          <p class="area-intro-body">La Mesa calls itself the Jewel of the Hills, and the hills are the point: the 1920s Craftsman bungalows of La Mesa Village, the 1950s and 1960s ranch houses around Grossmont and Lake Murray, and the custom homes on Mount Helix all sit on slopes where water runs toward someone's foundation. Much of it is older housing, with raised foundations, plaster walls and original drains. The crew handles <a href="/services/water-damage-repair-and-rebuild/">water damage repair and rebuild</a> in La Mesa, from drying through finished drywall and floors, dispatched from Chula Vista.</p>
+          <p class="area-intro-body">La Mesa calls itself the Jewel of the Hills, and the hills are the point: the 1920s Craftsman bungalows of La Mesa Village, the 1950s and 1960s ranch houses around Grossmont and Lake Murray, and the custom homes on Mount Helix all sit on slopes where water runs toward someone's foundation. Much of it is older housing, with raised foundations, plaster walls and original drains. The crew handles <a href="/services/water-damage-repair-and-rebuild/">water damage repair and rebuild</a> in La Mesa, including the drywall and floors after the drying, and is based in Chula Vista.</p>
         </div>
         <div class="area-cta-card">
-          <h3>Get an Estimate</h3>
-          <p>We serve La Mesa and surrounding neighborhoods. Contact us today for a no-obligation quote.</p>
+          <h3>Water in the House?</h3>
+          <p>We serve La Mesa and surrounding neighborhoods. Call the emergency line, or send the form if it can wait.</p>
           <a href="tel:+16195550100" class="area-cta-phone">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.15 12 19.79 19.79 0 011.1 3.18 2 2 0 013.1 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
             +1 (619) 555-0100
           </a>
-          <a href="/contact/" class="btn btn-primary" style="width:100%; justify-content:center;">Request a Quote</a>
+          <a href="/contact/" class="btn btn-primary" style="width:100%; justify-content:center;">Request Help Now</a>
           <p class="referral-line">We'll put you in touch with a local contractor.</p>
         </div>
       </div>
@@ -5146,12 +5187,12 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       <div class="area-services-grid services-grid--3col">
 <div class="area-service-card">
   <h3>Emergency Water Extraction and Drying in La Mesa</h3>
-  <p>Standing water pumped and extracted, the wet footprint mapped with a moisture meter, then air movers and dehumidifiers set and read daily until the structure reaches dry standard.</p>
+  <p>The wet footprint mapped with a moisture meter, standing water pumped and extracted, then air movers and dehumidifiers set and read daily until the structure reaches dry standard.</p>
   <a href="/services/emergency-water-extraction-and-drying/">Learn more →</a>
 </div>
 <div class="area-service-card">
   <h3>Burst Pipe and Slab Leak Cleanup in La Mesa</h3>
-  <p>Cleanup after a burst supply line or a leak under the slab: water out, the wet footprint around the leak mapped and dried, and the access the plumber opened documented for the repair scope.</p>
+  <p>Cleanup after a burst supply line or a leak under the slab: the wet footprint around the leak mapped, the water extracted and the structure dried, and the access the plumber opened documented for the repair scope.</p>
   <a href="/services/burst-pipe-and-slab-leak-cleanup/">Learn more →</a>
 </div>
 <div class="area-service-card">
@@ -5166,7 +5207,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
 </div>
 <div class="area-service-card">
   <h3>Water Damage Repair and Rebuild in La Mesa</h3>
-  <p>The repairs after drying: drywall, insulation, baseboard, paint, flooring and cabinets put back from the removed-materials list, on the same written scope as the dry-out.</p>
+  <p>The repairs after drying: drywall, insulation, baseboard, paint, flooring and cabinets put back, working from the list of what was removed.</p>
   <a href="/services/water-damage-repair-and-rebuild/">Learn more →</a>
 </div>
       </div>
@@ -5204,7 +5245,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
             <span class="faq-icon" aria-hidden="true">+</span>
           </button>
           <div class="faq-answer">
-            <div class="faq-answer-inner">Older La Mesa houses tend to land in the middle of the market bands because plaster, hardwood and raised floors take more labor than drywall over a slab: roughly $3,000 to $7,500 for a moderate loss, roughly $1,000 to $3,000 for a small one caught quickly, and roughly $7,500 to $20,000 and up for a major loss. Per square foot the San Diego market tends to run about $3 to $7.50 for the drying phase, with the rebuild priced separately. Each phase gets a written price after the inspection.</div>
+            <div class="faq-answer-inner">Older La Mesa houses typically land in the middle of the market bands because plaster, hardwood and raised floors take more labor than drywall over a slab: roughly $3,000 to $7,500 for a moderate loss, roughly $1,000 to $3,000 for a small one caught quickly, and roughly $7,500 to $20,000 and up for a major loss. Per square foot the San Diego market tends to run about $3 to $7.50 for the drying, with the rebuild priced separately. Ask for both as a written quote after the inspection.</div>
           </div>
         </div>
         <div class="faq-item" role="listitem">
@@ -5213,7 +5254,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
             <span class="faq-icon" aria-hidden="true">+</span>
           </button>
           <div class="faq-answer">
-            <div class="faq-answer-inner">Yes, and both call for a different approach than a tract house. Village bungalows have crawl spaces and plaster that have to be dried from below and checked with a meter rather than assumed, and the hillside homes on Mount Helix often have the water coming from the slope rather than from a pipe. A crew is dispatched from Chula Vista up the 125, and the Building Division on Allison Avenue handles any permit the repairs need.</div>
+            <div class="faq-answer-inner">Yes, and both call for a different approach than a tract house. Village bungalows have crawl spaces and plaster that have to be dried from below and checked with a meter rather than assumed, and the hillside homes on Mount Helix often have the water coming from the slope rather than from a pipe. We come up the 125 from Chula Vista, and the Building Division on Allison Avenue handles any permit the repairs need.</div>
           </div>
         </div>
         <div class="faq-item" role="listitem">
@@ -5246,7 +5287,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       <p class="area-location-blurb">La Mesa has called itself the Jewel of the Hills since its incorporation in 1912, and 61,121 people lived there at the 2020 census. It sits in the hills east of San Diego, with Lake Murray and Mission Trails Regional Park on its northern edge, Grossmont Center (opened 1961) where the 8 meets the 125, and Mount Helix just past the eastern city limit. La Mesa Village is the downtown.</p>
 <p class="area-location-blurb">The housing runs old. The Village and the blocks around it hold 1910s to 1930s Craftsman bungalows and Spanish Revival cottages on raised foundations with crawl spaces, while the postwar blocks toward Grossmont and the lake are 1950s and 1960s ranch houses on slabs. Harry Griffen Regional Park sits among them.</p>
 <p class="area-location-blurb">Old houses leak in old ways: a cast-iron drain dripping into the crawl space for months, plaster that wicks water up a wall, a garage water heater below street grade. Hillside lots send storm runoff into lower rooms, and Alvarado Creek, draining Lake Murray toward the San Diego River, runs through low ground.</p>
-<p class="area-location-blurb">Drying a raised-foundation house means getting air under the floor as well as into the room, so equipment goes in the crawl space when readings call for it. Permits go through La Mesa's Building Division on Allison Avenue, and the rebuild scope names them before that phase starts.</p>
+<p class="area-location-blurb">Drying a raised-foundation house means getting air under the floor as well as into the room, so equipment goes in the crawl space when readings call for it. Permits go through La Mesa's Building Division on Allison Avenue, and the rebuild scope names any that apply.</p>
     </div>
   </section>
 
@@ -5255,8 +5296,8 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
   <section class="quote-form-section" aria-labelledby="quote-form-heading">
     <div class="container">
       <div class="quote-form-card form-variant-inline-panel">
-        <h2 id="quote-form-heading">Get a Quote in La Mesa</h2>
-        <p class="quote-form-sub">Tell us about your project and you&rsquo;ll hear back within one business day.</p>
+        <h2 id="quote-form-heading">Request Help in La Mesa</h2>
+        <p class="quote-form-sub">Tell us where the water came from and which rooms are wet.</p>
         <form class="quote-form" action="https://leads-proxy.jeongpark95.workers.dev" method="POST" name="quote-lead" data-leads-form>
           <input type="hidden" name="run_id" value="waterdamage-chulavista-001">
           <div class="hp-field" aria-hidden="true"><input type="text" name="company_website" tabindex="-1" autocomplete="off"></div>
@@ -5268,17 +5309,17 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
           </div>
           <div class="quote-form-row">
             <input type="email" name="email" placeholder="Email (optional)" autocomplete="email" aria-label="Email address">
-            <input type="text" name="message" placeholder="What do you need done?" aria-label="Project details">
+            <input type="text" name="message" placeholder="Where the water came from and which rooms are wet." aria-label="Project details">
           </div>
           <div class="cf-turnstile" data-sitekey="0x4AAAAAAGEhzYf9wGkV4IbN" data-size="flexible" data-theme="light"></div>
           <input type="hidden" name="cf-sitekey" value="0x4AAAAAAGEhzYf9wGkV4IbN">
-          <button type="submit" class="quote-form-submit">Request a Quote</button>
+          <button type="submit" class="quote-form-submit">Request Help Now</button>
           <p class="form-consent">By sending this, you agree we can share your details with a local contractor who'll get in touch. <a href="/privacy/">Privacy Policy</a></p>
         </form>
         <div class="form-thank-you" aria-live="polite">
           <div class="form-thank-you-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div>
           <h3>We&rsquo;ve got your request!</h3>
-          <p>You&rsquo;ll hear back within one business day. Need to talk sooner? Call <a href="tel:+16195550100">+1 (619) 555-0100</a>.</p>
+          <p>Thanks, we have your message. For an emergency, call the line. Need to talk sooner? Call <a href="tel:+16195550100">+1 (619) 555-0100</a>.</p>
         </div>
       </div>
     </div>
@@ -5287,7 +5328,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
   <section id="cta-band" aria-labelledby="cta-heading">
     <div class="container">
       <h2 id="cta-heading">Standing in Water Right Now?</h2>
-      <p>Shut the main valve, keep everyone off the wet floor and call. The line is answered around the clock, a crew is dispatched from Chula Vista, and the plan and its price are written down before any equipment is set.</p>
+      <p>Call the emergency line, which is answered around the clock. The person who answers will walk you through shutting off the water. If it can wait, send the form, and it is answered during business hours.</p>
       <a href="/contact/" class="cta-band-btn">Request Help Now</a>
     </div>
   </section>
@@ -5328,7 +5369,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
 
 <footer id="site-footer" role="contentinfo" class="footer-variant-light-minimal">
   <div class="footer-top"><div class="container"><div class="footer-grid">
-    <div class="footer-col"><h4><a href="/" class="footer-brand-link">Chula Vista Restoration Co.</a></h4><p>Water damage restoration for Chula Vista and the South Bay: extraction, drying, cleanup and rebuild on one written scope. Serving National City, Imperial Beach, Bonita, Otay Ranch, Spring Valley, La Mesa and San Diego.</p><address class="footer-nap" style="font-style:normal;"><span>Chula Vista, California</span><br><a href="tel:+16195550100" style="color:rgba(255,255,255,0.65);">+1 (619) 555-0100</a></address></div>
+    <div class="footer-col"><h4><a href="/" class="footer-brand-link">Chula Vista Restoration Co.</a></h4><p>Water damage restoration for Chula Vista and the South Bay: water extraction, drying, cleanup and repairs. Serving National City, Imperial Beach, Bonita, Otay Ranch, Spring Valley, La Mesa and San Diego.</p><address class="footer-nap" style="font-style:normal;"><span>Chula Vista, California</span><br><a href="tel:+16195550100" style="color:rgba(255,255,255,0.65);">+1 (619) 555-0100</a></address></div>
     <div class="footer-col"><h4>Services</h4><ul>
             <li><a href="/services/emergency-water-extraction-and-drying/">Emergency Water Extraction and Drying</a></li>
             <li><a href="/services/burst-pipe-and-slab-leak-cleanup/">Burst Pipe and Slab Leak Cleanup</a></li>
@@ -5336,14 +5377,14 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
             <li><a href="/services/sewage-backup-cleanup/">Sewage Backup Cleanup</a></li>
             <li><a href="/services/water-damage-repair-and-rebuild/">Water Damage Repair and Rebuild</a></li>
 </ul></div>
-    <div class="footer-col"><h4>Inquiry</h4><ul><li><a href="/contact/">Request Quote</a></li><li><a href="/about/">About Us</a></li><li><a href="/faq/">FAQ</a></li><li><a href="/blog/">Blog</a></li><li><a href="/cost-guides/water-damage-repair-cost-per-square-foot/">Price Guide</a></li><li><a href="/privacy/">Privacy Policy</a></li><li><a href="/terms/">Terms of Service</a></li></ul></div>
+    <div class="footer-col"><h4>Inquiry</h4><ul><li><a href="/contact/">Request Help Now</a></li><li><a href="/about/">About Us</a></li><li><a href="/faq/">FAQ</a></li><li><a href="/blog/">Blog</a></li><li><a href="/cost-guides/water-damage-repair-cost-per-square-foot/">Price Guide</a></li><li><a href="/privacy/">Privacy Policy</a></li><li><a href="/terms/">Terms of Service</a></li></ul></div>
     <div class="footer-col"><h4>Serving the South Bay</h4><ul><li><a href="/">Chula Vista</a></li><li><a href="/areas/national-city/">National City</a></li><li><a href="/areas/imperial-beach/">Imperial Beach</a></li><li><a href="/areas/bonita/">Bonita</a></li><li><a href="/areas/otay-ranch/">Otay Ranch</a></li><li><a href="/areas/spring-valley/">Spring Valley</a></li></ul></div>
   </div></div></div>
   <div class="container"><p class="footer-disclaimer">This site is a free service to assist homeowners in connecting with local service contractors. All contractors are independent and this site does not warrant or guarantee any work performed. It is the responsibility of the homeowner to verify that the hired contractor furnishes the necessary license and insurance required for the work being performed. All persons depicted in a photo or video are actors or models and not contractors listed on this site.</p></div>
   <div class="container"><div class="footer-bottom"><span>© 2026 Chula Vista Restoration Co. All rights reserved.</span><span>Chula Vista, California, United States</span></div></div>
 </footer>
 
-<a id="mobile-cta" href="tel:+16195550100" aria-label="Call us now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.15 12 19.79 19.79 0 011.1 3.18 2 2 0 013.1 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>Call Now — +1 (619) 555-0100</a>
+<a id="mobile-cta" href="tel:+16195550100" aria-label="Call us now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.15 12 19.79 19.79 0 011.1 3.18 2 2 0 013.1 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>Call Now: +1 (619) 555-0100</a>
 
 <script>
   function toggleFaq(btn){var item=btn.closest('.faq-item');var isOpen=item.classList.contains('open');document.querySelectorAll('.faq-item.open').forEach(function(el){el.classList.remove('open');el.querySelector('.faq-question').setAttribute('aria-expanded','false');});if(!isOpen){item.classList.add('open');btn.setAttribute('aria-expanded','true');}}

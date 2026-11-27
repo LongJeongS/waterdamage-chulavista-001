@@ -4879,6 +4879,47 @@ body.look-plain .cg-more-list li { border-bottom: 1px solid var(--border); }
 body.look-plain .cg-more-list a { display: block; padding: 14px 0; font-size: 17px; font-weight: 600; color: var(--color-primary); }
 body.look-plain .cg-more-list a:hover { text-decoration: underline; }
 /* review-round-nov-2026:end */
+/* legibility-nov-2026:start */
+/* Legibility fixes 2026-11-27, from what tools/legibility_check.py measured on the first plain sites. One marked chunk
+   so older tests can compare "today minus these fixes" (tests/legibility_round.py); every rule is scoped to the plain look.
+   Numbers band: where the brand accent is under 3:1 on the brand colour the assembler adds stats-figure-plain and the
+   figures are white (Naples coral on green measured 2.3:1). A readable accent keeps its colour. */
+body.look-plain.stats-brand-band.stats-figure-plain #stats-bar .stat-value { color: #fff; }
+/* Call-to-action band: the paragraph sits inside .cta-band-inner, so the rule above for "#cta-band > .container > p"
+   never reached it and it stayed at the classic 75% white (4.1 to 4.4:1 over the tinted photo). This is the intended 92%. */
+body.look-plain #cta-band .cta-band-sub { color: rgba(255,255,255,0.92); }
+/* Blog post top section: the breadcrumb and the date line are full white, and a dark scrim sits behind the text block
+   (it fades in over the block's top padding), so a pale photo cannot wash them out: 30% black keeps white text at 4.5:1 or better even where the photo is pure
+   white over these brand colours. The photo keeps its 45%. */
+body.look-plain .post-hero-overlay { background-image: linear-gradient(180deg, rgba(0,0,0,0) 0, rgba(0,0,0,0.3) 40px, rgba(0,0,0,0.3) 100%); }
+body.look-plain .post-breadcrumb, body.look-plain .post-breadcrumb a, body.look-plain .post-meta { color: #fff; }
+/* Photo service cards (photo_overlay): the dark fade hangs from the card title, so however long the card's text is the
+   title and the text sit on it. It replaces the fade that was fixed at 20% to 72% of the card's height (a long text
+   pushed the title up into its light part: 2.7:1 on a pale photo). The icon tile stays above it. */
+body.look-plain #services.services-variant-photo-overlay .svc-photo::after { background: rgba(10,22,30,0.05); }
+body.look-plain #services.services-variant-photo-overlay .service-card h3::before { content: ""; position: absolute; z-index: -1; left: -22px; right: -22px; top: -110px; height: 1200px; pointer-events: none; background: linear-gradient(180deg, rgba(10,22,30,0) 0, rgba(10,22,30,0.5) 110px, rgba(10,22,30,0.88) 180px); }
+body.look-plain #services.services-variant-photo-overlay .service-icon { z-index: 2; }
+/* Heading faces that are hard to read small (config/font_traits.json: small-bodied like Cormorant Garamond, whose 17px
+   reads like 12.8px, or condensed like Bebas Neue): the assembler adds heading-face-small and the headings of 18px and
+   under, the contents and sidebar titles, the footer brand name and the logo kicker are set in the body font, bold.
+   Larger headings keep the heading face. */
+body.look-plain.heading-face-small #services:not(.services-variant-photo-overlay) .service-card h3, body.look-plain.heading-face-small .area-service-card h3, body.look-plain.heading-face-small .vp-text h3, body.look-plain.heading-face-small .vp-text h4, body.look-plain.heading-face-small .vp-card h3, body.look-plain.heading-face-small .process-step h3, body.look-plain.heading-face-small .application-item h3, body.look-plain.heading-face-small .related-card h3, body.look-plain.heading-face-small .cg-faq-item h3, body.look-plain.heading-face-small .blog-card-title, body.look-plain.heading-face-small .contact-info-header h2, body.look-plain.heading-face-small .sidebar-card h3, body.look-plain.heading-face-small .cg-toc-title, body.look-plain.heading-face-small #site-footer .footer-brand-link, body.look-plain.heading-face-small #site-nav .nav-logo .nav-logo-kicker { font-family: var(--font-body); font-weight: 700; }
+/* Footer disclaimer: 14px on both footers (it was 13.5px, and 13px on the light footer: one paragraph on every page,
+   which alone put 7 to 9% of a referral site's characters under 14px). */
+body.look-plain .footer-disclaimer, body.look-plain #site-footer.footer-variant-light-minimal .footer-disclaimer { font-size: 14px; }
+/* Blog pages toggle `is-open` (templates/blog-*.html); open the menu and the dropdown on it too. */
+body.look-plain .nav-mobile-menu.is-open { display: flex; }
+body.look-plain .nav-dropdown.is-open .nav-dropdown-menu { opacity: 1; pointer-events: auto; transform: translateY(0); visibility: visible; }
+/* legibility-nov-2026:end */
+/* template-round-nov-2026:start */
+/* ── Template round 2026-11-27 (tests/test_plain_template_round.py; the start and end markers let older tests set this
+   chunk aside: tests/template_round.py) ── */
+/* The open phone menu sits inside the fixed top bar, so a menu taller than the screen was cut off with no way to reach
+   its last links and button (Naples, Bakersfield on a 390x667 phone). It now scrolls inside what is left of the screen
+   under the bar (and the strip, where a site shows one), on every top bar and on the blog pages, whose script opens it
+   with `is-open`. The dynamic viewport height keeps the last button above a phone browser's toolbar. */
+body.look-plain #site-nav .nav-mobile-menu.open, body.look-plain #site-nav .nav-mobile-menu.is-open { max-height: calc(100vh - var(--plain-bar-h) - var(--plain-strip-h)); max-height: calc(100dvh - var(--plain-bar-h) - var(--plain-strip-h)); overflow-y: auto; overscroll-behavior: contain; }
+/* template-round-nov-2026:end */
 /* === hero-photo-form === */
 /* Top section: photo_form (the full-width photo with the plain look's left-heavy darkening; headline, text and phone on the left, a white
    quote-form card on the right over the photo; on phones the text comes first, then the card).
@@ -5084,7 +5125,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.15 12 19.79 19.79 0 011.1 3.18 2 2 0 013.1 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
           +1 (619) 555-0100
         </a>
-        <a href="/contact/" class="btn btn-primary">Request Help</a>
+        <a href="/contact/" class="btn btn-primary">Request Help Now</a>
       </div>
       <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" onclick="toggleMenu(this)">
         <span></span><span></span><span></span>
@@ -5106,7 +5147,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.15 12 19.79 19.79 0 011.1 3.18 2 2 0 013.1 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
       +1 (619) 555-0100
     </a>
-    <a href="/contact/" class="btn btn-primary mobile-cta" onclick="closeMenu()">Request Help</a>
+    <a href="/contact/" class="btn btn-primary mobile-cta" onclick="closeMenu()">Request Help Now</a>
   </nav>
 </header>
 
@@ -5114,7 +5155,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
 
   <!-- Post hero -->
   <section class="post-hero">
-    <img src="/images/blog/what-to-do-after-water-damage-chula-vista.webp" alt="What to Do After Water Damage in Your Chula Vista Home" loading="eager">
+    <img src="/images/blog/what-to-do-after-water-damage-chula-vista.webp" alt="Water pooled on a kitchen tile floor by the open sink cabinet, towels laid down, chairs upturned on the table" loading="eager">
     <div class="post-hero-overlay">
       <div class="container">
         <!-- Breadcrumb -->
@@ -5198,14 +5239,14 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
 
           <!-- End CTA -->
           <div class="post-cta-end">
-            <h3>Ready to Get Started in Chula Vista?</h3>
-            <p>Chula Vista Restoration Co. serves Chula Vista and the surrounding area. Get a free, no-obligation quote today.</p>
+            <h3>Water Damage in Chula Vista?</h3>
+            <p>Chula Vista Restoration Co. serves Chula Vista and the surrounding area. If you have water in the house now, call the emergency line.</p>
             <div class="cta-btns">
               <a href="tel:+16195550100" class="btn btn-secondary" style="background:var(--white);color:var(--color-accent);">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.15 12 19.79 19.79 0 011.1 3.18 2 2 0 013.1 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
                 Call +1 (619) 555-0100
               </a>
-              <a href="/contact/" class="btn btn-primary" style="background:var(--white);color:var(--color-accent);">Get a Quote</a>
+              <a href="/contact/" class="btn btn-primary" style="background:var(--white);color:var(--color-accent);">Request Help Now</a>
             </div>
           </div>
 
@@ -5216,9 +5257,9 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
 
           <!-- Quote CTA card -->
           <div class="sidebar-card" style="background:var(--color-primary);border-color:var(--color-primary);">
-            <h3 style="color:var(--white);">Get a Quote</h3>
-            <p style="color:rgba(255,255,255,0.85);">Serving Chula Vista and surrounding areas.</p>
-            <a href="/contact/" class="btn btn-primary" style="display:flex;width:100%;box-sizing:border-box;justify-content:center;background:var(--color-accent);">Request Quote</a>
+            <h3 style="color:var(--white);">Water in the House?</h3>
+            <p style="color:rgba(255,255,255,0.85);">Water damage restoration in Chula Vista and nearby towns.</p>
+            <a href="/contact/" class="btn btn-primary" style="display:flex;width:100%;box-sizing:border-box;justify-content:center;background:var(--color-accent);">Request Help Now</a>
             <a href="tel:+16195550100" style="display:block;text-align:center;margin-top:10px;font-size:14px;font-weight:600;color:rgba(255,255,255,0.85);">Or call +1 (619) 555-0100</a>
           </div>
 
@@ -5249,7 +5290,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       <div class="footer-grid">
         <div class="footer-col">
           <h4><a href="/" class="footer-brand-link">Chula Vista Restoration Co.</a></h4>
-          <p>Water damage restoration for Chula Vista and the South Bay: extraction, drying, cleanup and rebuild on one written scope. Serving National City, Imperial Beach, Bonita, Otay Ranch, Spring Valley, La Mesa and San Diego.</p>
+          <p>Water damage restoration for Chula Vista and the South Bay: water extraction, drying, cleanup and repairs. Serving National City, Imperial Beach, Bonita, Otay Ranch, Spring Valley, La Mesa and San Diego.</p>
           <address class="footer-nap" style="font-style:normal;">
             <span>Chula Vista, California</span><br>
             <a href="tel:+16195550100" style="color: rgba(255,255,255,0.65);">+1 (619) 555-0100</a><br>
@@ -5268,7 +5309,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
         <div class="footer-col">
           <h4>Inquiry</h4>
           <ul>
-            <li><a href="/contact/">Request Quote</a></li>
+            <li><a href="/contact/">Request Help Now</a></li>
             <li><a href="/about/">About Us</a></li>
             <li><a href="/faq/">FAQ</a></li>
             <li><a href="/blog/">Blog</a></li><li><a href="/cost-guides/water-damage-repair-cost-per-square-foot/">Price Guide</a></li>
