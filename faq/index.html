@@ -4841,6 +4841,47 @@ body.look-plain .cg-more-list li { border-bottom: 1px solid var(--border); }
 body.look-plain .cg-more-list a { display: block; padding: 14px 0; font-size: 17px; font-weight: 600; color: var(--color-primary); }
 body.look-plain .cg-more-list a:hover { text-decoration: underline; }
 /* review-round-nov-2026:end */
+/* legibility-nov-2026:start */
+/* Legibility fixes 2026-11-27, from what tools/legibility_check.py measured on the first plain sites. One marked chunk
+   so older tests can compare "today minus these fixes" (tests/legibility_round.py); every rule is scoped to the plain look.
+   Numbers band: where the brand accent is under 3:1 on the brand colour the assembler adds stats-figure-plain and the
+   figures are white (Naples coral on green measured 2.3:1). A readable accent keeps its colour. */
+body.look-plain.stats-brand-band.stats-figure-plain #stats-bar .stat-value { color: #fff; }
+/* Call-to-action band: the paragraph sits inside .cta-band-inner, so the rule above for "#cta-band > .container > p"
+   never reached it and it stayed at the classic 75% white (4.1 to 4.4:1 over the tinted photo). This is the intended 92%. */
+body.look-plain #cta-band .cta-band-sub { color: rgba(255,255,255,0.92); }
+/* Blog post top section: the breadcrumb and the date line are full white, and a dark scrim sits behind the text block
+   (it fades in over the block's top padding), so a pale photo cannot wash them out: 30% black keeps white text at 4.5:1 or better even where the photo is pure
+   white over these brand colours. The photo keeps its 45%. */
+body.look-plain .post-hero-overlay { background-image: linear-gradient(180deg, rgba(0,0,0,0) 0, rgba(0,0,0,0.3) 40px, rgba(0,0,0,0.3) 100%); }
+body.look-plain .post-breadcrumb, body.look-plain .post-breadcrumb a, body.look-plain .post-meta { color: #fff; }
+/* Photo service cards (photo_overlay): the dark fade hangs from the card title, so however long the card's text is the
+   title and the text sit on it. It replaces the fade that was fixed at 20% to 72% of the card's height (a long text
+   pushed the title up into its light part: 2.7:1 on a pale photo). The icon tile stays above it. */
+body.look-plain #services.services-variant-photo-overlay .svc-photo::after { background: rgba(10,22,30,0.05); }
+body.look-plain #services.services-variant-photo-overlay .service-card h3::before { content: ""; position: absolute; z-index: -1; left: -22px; right: -22px; top: -110px; height: 1200px; pointer-events: none; background: linear-gradient(180deg, rgba(10,22,30,0) 0, rgba(10,22,30,0.5) 110px, rgba(10,22,30,0.88) 180px); }
+body.look-plain #services.services-variant-photo-overlay .service-icon { z-index: 2; }
+/* Heading faces that are hard to read small (config/font_traits.json: small-bodied like Cormorant Garamond, whose 17px
+   reads like 12.8px, or condensed like Bebas Neue): the assembler adds heading-face-small and the headings of 18px and
+   under, the contents and sidebar titles, the footer brand name and the logo kicker are set in the body font, bold.
+   Larger headings keep the heading face. */
+body.look-plain.heading-face-small #services:not(.services-variant-photo-overlay) .service-card h3, body.look-plain.heading-face-small .area-service-card h3, body.look-plain.heading-face-small .vp-text h3, body.look-plain.heading-face-small .vp-text h4, body.look-plain.heading-face-small .vp-card h3, body.look-plain.heading-face-small .process-step h3, body.look-plain.heading-face-small .application-item h3, body.look-plain.heading-face-small .related-card h3, body.look-plain.heading-face-small .cg-faq-item h3, body.look-plain.heading-face-small .blog-card-title, body.look-plain.heading-face-small .contact-info-header h2, body.look-plain.heading-face-small .sidebar-card h3, body.look-plain.heading-face-small .cg-toc-title, body.look-plain.heading-face-small #site-footer .footer-brand-link, body.look-plain.heading-face-small #site-nav .nav-logo .nav-logo-kicker { font-family: var(--font-body); font-weight: 700; }
+/* Footer disclaimer: 14px on both footers (it was 13.5px, and 13px on the light footer: one paragraph on every page,
+   which alone put 7 to 9% of a referral site's characters under 14px). */
+body.look-plain .footer-disclaimer, body.look-plain #site-footer.footer-variant-light-minimal .footer-disclaimer { font-size: 14px; }
+/* Blog pages toggle `is-open` (templates/blog-*.html); open the menu and the dropdown on it too. */
+body.look-plain .nav-mobile-menu.is-open { display: flex; }
+body.look-plain .nav-dropdown.is-open .nav-dropdown-menu { opacity: 1; pointer-events: auto; transform: translateY(0); visibility: visible; }
+/* legibility-nov-2026:end */
+/* template-round-nov-2026:start */
+/* ── Template round 2026-11-27 (tests/test_plain_template_round.py; the start and end markers let older tests set this
+   chunk aside: tests/template_round.py) ── */
+/* The open phone menu sits inside the fixed top bar, so a menu taller than the screen was cut off with no way to reach
+   its last links and button (Naples, Bakersfield on a 390x667 phone). It now scrolls inside what is left of the screen
+   under the bar (and the strip, where a site shows one), on every top bar and on the blog pages, whose script opens it
+   with `is-open`. The dynamic viewport height keeps the last button above a phone browser's toolbar. */
+body.look-plain #site-nav .nav-mobile-menu.open, body.look-plain #site-nav .nav-mobile-menu.is-open { max-height: calc(100vh - var(--plain-bar-h) - var(--plain-strip-h)); max-height: calc(100dvh - var(--plain-bar-h) - var(--plain-strip-h)); overflow-y: auto; overscroll-behavior: contain; }
+/* template-round-nov-2026:end */
 /* === hero-photo-form === */
 /* Top section: photo_form (the full-width photo with the plain look's left-heavy darkening; headline, text and phone on the left, a white
    quote-form card on the right over the photo; on phones the text comes first, then the card).
@@ -4996,7 +5037,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       </ul>
       <div class="nav-actions">
         <a href="tel:+16195550100" class="nav-phone" aria-label="Call us"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.15 12 19.79 19.79 0 011.1 3.18 2 2 0 013.1 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>+1 (619) 555-0100</a>
-        <a href="/contact/" class="btn btn-primary">Request Help</a>
+        <a href="/contact/" class="btn btn-primary">Request Help Now</a>
       </div>
       <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" onclick="toggleMenu(this)"><span></span><span></span><span></span></button>
     </nav>
@@ -5013,7 +5054,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
     <a href="/cost-guides/water-damage-repair-cost-per-square-foot/" onclick="closeMenu()">Price Guide</a>
     <a href="/contact/" onclick="closeMenu()">Contact</a>
     <a href="tel:+16195550100" onclick="closeMenu()" style="display:flex;align-items:center;gap:8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.15 12 19.79 19.79 0 011.1 3.18 2 2 0 013.1 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>+1 (619) 555-0100</a>
-    <a href="/contact/" class="btn btn-primary mobile-cta" onclick="closeMenu()">Request Help</a>
+    <a href="/contact/" class="btn btn-primary mobile-cta" onclick="closeMenu()">Request Help Now</a>
   </nav>
 </header>
 
@@ -5022,7 +5063,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
   <!-- ── FAQ Hero ────────────────────────────────────────────────────────── -->
   <section class="faq-hero">
     <div class="container">
-      <span class="section-eyebrow">Questions at 2 a.m.</span>
+      <span class="section-eyebrow">Common Questions</span>
       <h1>Water Damage Questions From Chula Vista Homeowners</h1>
       <p>Straight answers on what to do first, what it tends to cost and what the drying actually involves.</p>
     </div>
@@ -5050,19 +5091,19 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
             <div class="faq-accordion">
               <details class="faq-item" open>
                 <summary class="faq-question" tabindex="-1">How much does water damage restoration cost in Chula Vista?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
-                <div class="faq-answer">Local cost guides for the California market put a minor clean-water loss caught early at roughly $1,000 to $3,000, a moderate loss with drying and some demolition at roughly $3,000 to $7,500, and a major or multi-room loss at roughly $7,500 to $20,000 and up. Per square foot, the San Diego market tends to run about $3 to $7.50 depending on water category and materials. The inspection and drying setup are quoted per job after the inspection, and the price of each phase is written down before that phase starts.</div>
+                <div class="faq-answer">Local cost guides for the California market typically put a minor clean-water loss caught early at roughly $1,000 to $3,000, a moderate loss with drying and some demolition at roughly $3,000 to $7,500, and a major or multi-room loss at roughly $7,500 to $20,000 and up. Per square foot, the San Diego market tends to run about $3 to $7.50 depending on water category and materials. Every job is quoted after an inspection, so ask for a written quote for your own home.</div>
               </details>
               <details class="faq-item" open>
                 <summary class="faq-question" tabindex="-1">Does homeowners insurance cover water damage, and will you deal with my insurance company?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
-                <div class="faq-answer">Coverage is the policy's and the adjuster's call, and it usually turns on whether the loss was sudden (a burst pipe) or gradual (a slow leak), and whether outside flooding is a separate policy. What this company does is photograph, measure and log the job from the first visit in the format an adjuster asks for, and give you that file. You own the claim and the conversation with your insurer; the record is built so that conversation is short. Call your insurer early and keep every receipt.</div>
+                <div class="faq-answer">Coverage is the policy's and the adjuster's call, and it usually turns on whether the loss was sudden (a burst pipe) or gradual (a slow leak), and whether outside flooding is a separate policy. What we do is photograph, measure and log the job, and give you that file. The claim and the conversation with your insurer are yours. Call your insurer early and keep every receipt.</div>
               </details>
               <details class="faq-item" open>
                 <summary class="faq-question" tabindex="-1">How is the price set, and when do I see it in writing?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
-                <div class="faq-answer">After the inspection and before each phase starts. The crew lead maps the loss, writes the extraction and drying plan with its price, and hands it to you before the first machine is plugged in. When drying is done, the cleanup and rebuild phases are each priced from the removed-materials list and written down the same way. No phase starts on a verbal number. Quotes are no-obligation.</div>
+                <div class="faq-answer">After the inspection, before any work starts. The crew lead maps the loss, writes the extraction and drying plan with its price, and hands it to you before the first machine is plugged in. Repairs are priced the same way once the drying is done, from the list of what was removed. Quotes are no-obligation.</div>
               </details>
               <details class="faq-item" open>
                 <summary class="faq-question" tabindex="-1">What records do you give me for an insurance claim?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
-                <div class="faq-answer">Photos of the loss as found and at every stage, the moisture map with starting and final readings for each material, the daily drying log, a list of everything removed with its location, measurements of affected areas and the written per-phase scope. It is the set an adjuster asks for, assembled from the first visit rather than reconstructed afterward. You receive the file whether or not you make a claim.</div>
+                <div class="faq-answer">Photos of the loss as found and at every stage, the moisture map with starting and final readings for each material, the daily drying log, a list of everything removed with its location, measurements of affected areas and the written scope. It is the set an adjuster asks for, assembled from the first visit rather than reconstructed afterward. You receive the file whether or not you make a claim.</div>
               </details>
             </div>
           </div>
@@ -5072,19 +5113,19 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
             <div class="faq-accordion">
               <details class="faq-item" open>
                 <summary class="faq-question" tabindex="-1">What should I do in the first hour after I find a leak or flooding in my Chula Vista home?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
-                <div class="faq-answer">Shut the main water valve, usually at the front of the house near the hose bib or in the meter box at the curb. If water is near outlets or the water heater, switch off the breaker to those rooms from a dry spot. Keep people and pets off the wet floor, move what you can lift to a dry room and photograph everything before it is moved. Then call. The emergency line is answered around the clock and a crew is dispatched from Chula Vista.</div>
+                <div class="faq-answer">Shut the main water valve, usually at the front of the house near the hose bib or in the meter box at the curb. If water is near outlets or the water heater, switch off the breaker to those rooms from a dry spot. Keep people and pets off the wet floor, move what you can lift to a dry room and photograph everything before it is moved. Then call. The emergency line is answered around the clock.</div>
               </details>
               <details class="faq-item" open>
                 <summary class="faq-question" tabindex="-1">Can I just dry it out myself with fans, or do I need a restoration company?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
-                <div class="faq-answer">A small clean-water spill on tile that you caught immediately can be mopped and fanned. Anything that reached carpet pad, drywall, baseboard or cabinets usually cannot, because a house fan dries the surface while the inside of the wall stays wet, and materials left wet past about 48 hours are commonly cited as able to support mold growth. A moisture meter shows what a fan cannot. If the water was grey or black, or has been sitting overnight, call rather than fan.</div>
+                <div class="faq-answer">A small clean-water spill on tile that you caught immediately can be mopped and fanned. Anything that reached carpet pad, drywall, baseboard or cabinets usually cannot, because a house fan dries the surface while the inside of the wall stays wet, and materials left wet past about 48 hours are commonly cited as able to support mold growth. A moisture meter shows what a fan cannot. If the water was gray or black, or has been sitting overnight, call rather than fan.</div>
               </details>
               <details class="faq-item" open>
                 <summary class="faq-question" tabindex="-1">Should I turn off the power or the water main first?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
                 <div class="faq-answer">Water first, unless water is already touching outlets, cords or the water heater, in which case stop at the breaker panel on your way if you can reach it from a dry spot. Never step into standing water to reach a panel or an appliance. Once the main is off, the water stops rising and everything after that is cleanup rather than a growing loss. If you cannot find the main valve, the person answering the line will walk you to it.</div>
               </details>
               <details class="faq-item" open>
-                <summary class="faq-question" tabindex="-1">Why does it matter whether the water was clean, grey or black?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
-                <div class="faq-answer">It is the industry's convention for how contaminated the water is. Category 1 is clean water from a supply line, water heater or rain through a roof. Category 2, grey water, has some contamination, such as dishwasher or washing machine discharge. Category 3, black water, is sewage and water that came across the ground as flooding. The category decides what can be dried in place and what porous material has to come out, which is why the crew lead names it at the inspection.</div>
+                <summary class="faq-question" tabindex="-1">Why does it matter whether the water was clean, gray or black?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
+                <div class="faq-answer">Clean, gray and black are the industry's labels for how contaminated the water is. Category 1 is clean water from a supply line, water heater or, in most cases, rain through a roof. Category 2, gray water, has some contamination, such as dishwasher or washing machine discharge. Category 3, black water, is sewage and water that came across the ground as flooding. The category decides what can be dried in place and what porous material has to come out, which is why the crew lead names it at the inspection.</div>
               </details>
             </div>
           </div>
@@ -5094,7 +5135,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
             <div class="faq-accordion">
               <details class="faq-item" open>
                 <summary class="faq-question" tabindex="-1">How long does it take to dry out water damage in a house?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
-                <div class="faq-answer">Most residential losses take about three to five days of drying once the water is out and equipment is set. Some take longer when water sat for days or reached subfloor, cabinets or insulation, and dense materials like hardwood, plaster and concrete dry slower than drywall. Equipment runs around the clock and readings are taken daily; machines come out as each material reaches its dry standard, not on a fixed date. The written drying plan gives you the expected window up front.</div>
+                <div class="faq-answer">Most residential losses take about three to five days of drying once the water is out and equipment is set. Some take longer when water sat for days or reached subfloor, cabinets or insulation, and dense materials like hardwood, plaster and concrete dry slower than drywall. Equipment runs around the clock and readings are taken daily; machines come out as each material reaches its dry standard, not on a fixed date.</div>
               </details>
               <details class="faq-item" open>
                 <summary class="faq-question" tabindex="-1">Can I stay in my home while the water damage is being dried out?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
@@ -5106,7 +5147,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
               </details>
               <details class="faq-item" open>
                 <summary class="faq-question" tabindex="-1">Do you repair the drywall and flooring after the drying, or only dry it?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
-                <div class="faq-answer">Both, on one written scope. Drying and cleanup are the first phases; the repair of drywall, insulation, baseboard, paint, flooring and cabinets is the last. Everything removed during drying goes on a list, and the rebuild restores that list.</div>
+                <div class="faq-answer">Both. Drying and cleanup come first, and the repair of drywall, insulation, baseboard, paint, flooring and cabinets follows. Everything removed during drying goes on a list, and the rebuild works from that list.</div>
               </details>
             </div>
           </div>
@@ -5115,16 +5156,16 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
             <h2>Service Areas</h2>
             <div class="faq-accordion">
               <details class="faq-item" open>
-                <summary class="faq-question" tabindex="-1">Should I call a national franchise or a local Chula Vista company?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
-                <div class="faq-answer">Either can do good drying; the differences are where the truck comes from and who finishes the job. A national franchise may draw crews from a wider territory and may hand the repairs to a separate contractor, which can leave a homeowner with a dry shell and a search for someone to put the walls back. A Chula Vista company dispatches from the South Bay and can carry the job through the rebuild on one scope. Whoever you call, ask for the California contractor license number, the drying standard they follow and a written per-phase price. Then pick the one that answers plainly.</div>
+                <summary class="faq-question" tabindex="-1">What should I ask a water damage company in Chula Vista before I hire one?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
+                <div class="faq-answer">Ask which drying standard they follow, whether they check moisture with a meter and log the readings each day, and whether they also do the repairs or stop once the structure is dry. Ask for the plan and its price in writing before equipment is set, and for copies of the photos and readings. Whoever you call, get those answers before the work starts.</div>
               </details>
               <details class="faq-item" open>
                 <summary class="faq-question" tabindex="-1">Which South Bay areas do you serve from Chula Vista?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
-                <div class="faq-answer">Chula Vista, National City, Imperial Beach, Bonita, Otay Ranch, Spring Valley, La Mesa and the city of San Diego, a radius of about 25 miles from Chula Vista. Eastlake, Rolling Hills Ranch and the rest of eastern Chula Vista are inside the city and served. Crews are dispatched from Chula Vista, so the South Bay is the close end of the radius.</div>
+                <div class="faq-answer">Chula Vista, National City, Imperial Beach, Bonita, Otay Ranch, Spring Valley, La Mesa and the city of San Diego, a radius of about 25 miles from Chula Vista. Eastlake, Rolling Hills Ranch and the rest of eastern Chula Vista are inside the city and served.</div>
               </details>
               <details class="faq-item" open>
                 <summary class="faq-question" tabindex="-1">Do you handle slab leaks in Eastlake and Otay Ranch homes as well as older Chula Vista tracts?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary>
-                <div class="faq-answer">Yes. Older slab-on-grade tracts west of the 805 are where most slab leaks show up, because copper lines have spent decades under concrete. Eastlake and Otay Ranch homes from the 1990s onward see more failures at fittings, water heaters and second-floor bathrooms that soak the ceiling below. The cleanup sequence is the same for both: stop it, extract, map, dry and document, with a plumber on the pipe repair itself.</div>
+                <div class="faq-answer">Yes. Older slab-on-grade tracts west of the 805 are where most slab leaks show up, because copper lines have spent decades under concrete. Eastlake and Otay Ranch homes from the 1990s onward see more failures at fittings, water heaters and second-floor bathrooms that soak the ceiling below. The cleanup sequence is the same for both: stop it, map, extract, dry and document, with a plumber on the pipe repair itself.</div>
               </details>
             </div>
           </div>
@@ -5138,7 +5179,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
   <section id="cta-band" aria-labelledby="cta-heading">
     <div class="container">
       <h2 id="cta-heading">Standing in Water Right Now?</h2>
-      <p>Shut the main valve, keep everyone off the wet floor and call. The line is answered around the clock, a crew is dispatched from Chula Vista, and the plan and its price are written down before any equipment is set.</p>
+      <p>Call the emergency line, which is answered around the clock. The person who answers will walk you through shutting off the water. If it can wait, send the form, and it is answered during business hours.</p>
       <a href="/contact/" class="cta-band-btn">Request Help Now</a>
     </div>
   </section>
@@ -5155,7 +5196,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       "name": "How much does water damage restoration cost in Chula Vista?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Local cost guides for the California market put a minor clean-water loss caught early at roughly $1,000 to $3,000, a moderate loss with drying and some demolition at roughly $3,000 to $7,500, and a major or multi-room loss at roughly $7,500 to $20,000 and up. Per square foot, the San Diego market tends to run about $3 to $7.50 depending on water category and materials. The inspection and drying setup are quoted per job after the inspection, and the price of each phase is written down before that phase starts."
+        "text": "Local cost guides for the California market typically put a minor clean-water loss caught early at roughly $1,000 to $3,000, a moderate loss with drying and some demolition at roughly $3,000 to $7,500, and a major or multi-room loss at roughly $7,500 to $20,000 and up. Per square foot, the San Diego market tends to run about $3 to $7.50 depending on water category and materials. Every job is quoted after an inspection, so ask for a written quote for your own home."
       }
     },
     {
@@ -5163,7 +5204,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       "name": "What should I do in the first hour after I find a leak or flooding in my Chula Vista home?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Shut the main water valve, usually at the front of the house near the hose bib or in the meter box at the curb. If water is near outlets or the water heater, switch off the breaker to those rooms from a dry spot. Keep people and pets off the wet floor, move what you can lift to a dry room and photograph everything before it is moved. Then call. The emergency line is answered around the clock and a crew is dispatched from Chula Vista."
+        "text": "Shut the main water valve, usually at the front of the house near the hose bib or in the meter box at the curb. If water is near outlets or the water heater, switch off the breaker to those rooms from a dry spot. Keep people and pets off the wet floor, move what you can lift to a dry room and photograph everything before it is moved. Then call. The emergency line is answered around the clock."
       }
     },
     {
@@ -5171,7 +5212,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       "name": "How long does it take to dry out water damage in a house?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Most residential losses take about three to five days of drying once the water is out and equipment is set. Some take longer when water sat for days or reached subfloor, cabinets or insulation, and dense materials like hardwood, plaster and concrete dry slower than drywall. Equipment runs around the clock and readings are taken daily; machines come out as each material reaches its dry standard, not on a fixed date. The written drying plan gives you the expected window up front."
+        "text": "Most residential losses take about three to five days of drying once the water is out and equipment is set. Some take longer when water sat for days or reached subfloor, cabinets or insulation, and dense materials like hardwood, plaster and concrete dry slower than drywall. Equipment runs around the clock and readings are taken daily; machines come out as each material reaches its dry standard, not on a fixed date."
       }
     },
     {
@@ -5179,7 +5220,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       "name": "Does homeowners insurance cover water damage, and will you deal with my insurance company?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Coverage is the policy's and the adjuster's call, and it usually turns on whether the loss was sudden (a burst pipe) or gradual (a slow leak), and whether outside flooding is a separate policy. What this company does is photograph, measure and log the job from the first visit in the format an adjuster asks for, and give you that file. You own the claim and the conversation with your insurer; the record is built so that conversation is short. Call your insurer early and keep every receipt."
+        "text": "Coverage is the policy's and the adjuster's call, and it usually turns on whether the loss was sudden (a burst pipe) or gradual (a slow leak), and whether outside flooding is a separate policy. What we do is photograph, measure and log the job, and give you that file. The claim and the conversation with your insurer are yours. Call your insurer early and keep every receipt."
       }
     },
     {
@@ -5187,7 +5228,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       "name": "Can I just dry it out myself with fans, or do I need a restoration company?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "A small clean-water spill on tile that you caught immediately can be mopped and fanned. Anything that reached carpet pad, drywall, baseboard or cabinets usually cannot, because a house fan dries the surface while the inside of the wall stays wet, and materials left wet past about 48 hours are commonly cited as able to support mold growth. A moisture meter shows what a fan cannot. If the water was grey or black, or has been sitting overnight, call rather than fan."
+        "text": "A small clean-water spill on tile that you caught immediately can be mopped and fanned. Anything that reached carpet pad, drywall, baseboard or cabinets usually cannot, because a house fan dries the surface while the inside of the wall stays wet, and materials left wet past about 48 hours are commonly cited as able to support mold growth. A moisture meter shows what a fan cannot. If the water was gray or black, or has been sitting overnight, call rather than fan."
       }
     },
     {
@@ -5200,10 +5241,10 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
     },
     {
       "@type": "Question",
-      "name": "Why does it matter whether the water was clean, grey or black?",
+      "name": "Why does it matter whether the water was clean, gray or black?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It is the industry's convention for how contaminated the water is. Category 1 is clean water from a supply line, water heater or rain through a roof. Category 2, grey water, has some contamination, such as dishwasher or washing machine discharge. Category 3, black water, is sewage and water that came across the ground as flooding. The category decides what can be dried in place and what porous material has to come out, which is why the crew lead names it at the inspection."
+        "text": "Clean, gray and black are the industry's labels for how contaminated the water is. Category 1 is clean water from a supply line, water heater or, in most cases, rain through a roof. Category 2, gray water, has some contamination, such as dishwasher or washing machine discharge. Category 3, black water, is sewage and water that came across the ground as flooding. The category decides what can be dried in place and what porous material has to come out, which is why the crew lead names it at the inspection."
       }
     },
     {
@@ -5227,7 +5268,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       "name": "Do you repair the drywall and flooring after the drying, or only dry it?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Both, on one written scope. Drying and cleanup are the first phases; the repair of drywall, insulation, baseboard, paint, flooring and cabinets is the last. Everything removed during drying goes on a list, and the rebuild restores that list."
+        "text": "Both. Drying and cleanup come first, and the repair of drywall, insulation, baseboard, paint, flooring and cabinets follows. Everything removed during drying goes on a list, and the rebuild works from that list."
       }
     },
     {
@@ -5235,7 +5276,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       "name": "How is the price set, and when do I see it in writing?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "After the inspection and before each phase starts. The crew lead maps the loss, writes the extraction and drying plan with its price, and hands it to you before the first machine is plugged in. When drying is done, the cleanup and rebuild phases are each priced from the removed-materials list and written down the same way. No phase starts on a verbal number. Quotes are no-obligation."
+        "text": "After the inspection, before any work starts. The crew lead maps the loss, writes the extraction and drying plan with its price, and hands it to you before the first machine is plugged in. Repairs are priced the same way once the drying is done, from the list of what was removed. Quotes are no-obligation."
       }
     },
     {
@@ -5243,15 +5284,15 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       "name": "What records do you give me for an insurance claim?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Photos of the loss as found and at every stage, the moisture map with starting and final readings for each material, the daily drying log, a list of everything removed with its location, measurements of affected areas and the written per-phase scope. It is the set an adjuster asks for, assembled from the first visit rather than reconstructed afterward. You receive the file whether or not you make a claim."
+        "text": "Photos of the loss as found and at every stage, the moisture map with starting and final readings for each material, the daily drying log, a list of everything removed with its location, measurements of affected areas and the written scope. It is the set an adjuster asks for, assembled from the first visit rather than reconstructed afterward. You receive the file whether or not you make a claim."
       }
     },
     {
       "@type": "Question",
-      "name": "Should I call a national franchise or a local Chula Vista company?",
+      "name": "What should I ask a water damage company in Chula Vista before I hire one?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Either can do good drying; the differences are where the truck comes from and who finishes the job. A national franchise may draw crews from a wider territory and may hand the repairs to a separate contractor, which can leave a homeowner with a dry shell and a search for someone to put the walls back. A Chula Vista company dispatches from the South Bay and can carry the job through the rebuild on one scope. Whoever you call, ask for the California contractor license number, the drying standard they follow and a written per-phase price. Then pick the one that answers plainly."
+        "text": "Ask which drying standard they follow, whether they check moisture with a meter and log the readings each day, and whether they also do the repairs or stop once the structure is dry. Ask for the plan and its price in writing before equipment is set, and for copies of the photos and readings. Whoever you call, get those answers before the work starts."
       }
     },
     {
@@ -5259,7 +5300,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       "name": "Which South Bay areas do you serve from Chula Vista?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Chula Vista, National City, Imperial Beach, Bonita, Otay Ranch, Spring Valley, La Mesa and the city of San Diego, a radius of about 25 miles from Chula Vista. Eastlake, Rolling Hills Ranch and the rest of eastern Chula Vista are inside the city and served. Crews are dispatched from Chula Vista, so the South Bay is the close end of the radius."
+        "text": "Chula Vista, National City, Imperial Beach, Bonita, Otay Ranch, Spring Valley, La Mesa and the city of San Diego, a radius of about 25 miles from Chula Vista. Eastlake, Rolling Hills Ranch and the rest of eastern Chula Vista are inside the city and served."
       }
     },
     {
@@ -5267,7 +5308,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
       "name": "Do you handle slab leaks in Eastlake and Otay Ranch homes as well as older Chula Vista tracts?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. Older slab-on-grade tracts west of the 805 are where most slab leaks show up, because copper lines have spent decades under concrete. Eastlake and Otay Ranch homes from the 1990s onward see more failures at fittings, water heaters and second-floor bathrooms that soak the ceiling below. The cleanup sequence is the same for both: stop it, extract, map, dry and document, with a plumber on the pipe repair itself."
+        "text": "Yes. Older slab-on-grade tracts west of the 805 are where most slab leaks show up, because copper lines have spent decades under concrete. Eastlake and Otay Ranch homes from the 1990s onward see more failures at fittings, water heaters and second-floor bathrooms that soak the ceiling below. The cleanup sequence is the same for both: stop it, map, extract, dry and document, with a plumber on the pipe repair itself."
       }
     }
   ]
@@ -5276,7 +5317,7 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
 
 <footer id="site-footer" role="contentinfo" class="footer-variant-light-minimal">
   <div class="footer-top"><div class="container"><div class="footer-grid">
-    <div class="footer-col"><h4><a href="/" class="footer-brand-link">Chula Vista Restoration Co.</a></h4><p>Water damage restoration for Chula Vista and the South Bay: extraction, drying, cleanup and rebuild on one written scope. Serving National City, Imperial Beach, Bonita, Otay Ranch, Spring Valley, La Mesa and San Diego.</p><address class="footer-nap" style="font-style:normal;"><span>Chula Vista, California</span><br><a href="tel:+16195550100" style="color:rgba(255,255,255,0.65);">+1 (619) 555-0100</a></address></div>
+    <div class="footer-col"><h4><a href="/" class="footer-brand-link">Chula Vista Restoration Co.</a></h4><p>Water damage restoration for Chula Vista and the South Bay: water extraction, drying, cleanup and repairs. Serving National City, Imperial Beach, Bonita, Otay Ranch, Spring Valley, La Mesa and San Diego.</p><address class="footer-nap" style="font-style:normal;"><span>Chula Vista, California</span><br><a href="tel:+16195550100" style="color:rgba(255,255,255,0.65);">+1 (619) 555-0100</a></address></div>
     <div class="footer-col"><h4>Services</h4><ul>
             <li><a href="/services/emergency-water-extraction-and-drying/">Emergency Water Extraction and Drying</a></li>
             <li><a href="/services/burst-pipe-and-slab-leak-cleanup/">Burst Pipe and Slab Leak Cleanup</a></li>
@@ -5284,14 +5325,14 @@ body.look-plain.has-emergency-strip #site-nav .nav-mobile-menu.open { max-height
             <li><a href="/services/sewage-backup-cleanup/">Sewage Backup Cleanup</a></li>
             <li><a href="/services/water-damage-repair-and-rebuild/">Water Damage Repair and Rebuild</a></li>
 </ul></div>
-    <div class="footer-col"><h4>Inquiry</h4><ul><li><a href="/contact/">Request Quote</a></li><li><a href="/about/">About Us</a></li><li><a href="/faq/">FAQ</a></li><li><a href="/blog/">Blog</a></li><li><a href="/cost-guides/water-damage-repair-cost-per-square-foot/">Price Guide</a></li><li><a href="/privacy/">Privacy Policy</a></li><li><a href="/terms/">Terms of Service</a></li></ul></div>
+    <div class="footer-col"><h4>Inquiry</h4><ul><li><a href="/contact/">Request Help Now</a></li><li><a href="/about/">About Us</a></li><li><a href="/faq/">FAQ</a></li><li><a href="/blog/">Blog</a></li><li><a href="/cost-guides/water-damage-repair-cost-per-square-foot/">Price Guide</a></li><li><a href="/privacy/">Privacy Policy</a></li><li><a href="/terms/">Terms of Service</a></li></ul></div>
     <div class="footer-col"><h4>Serving the South Bay</h4><ul><li><a href="/">Chula Vista</a></li><li><a href="/areas/national-city/">National City</a></li><li><a href="/areas/imperial-beach/">Imperial Beach</a></li><li><a href="/areas/bonita/">Bonita</a></li><li><a href="/areas/otay-ranch/">Otay Ranch</a></li><li><a href="/areas/spring-valley/">Spring Valley</a></li></ul></div>
   </div></div></div>
   <div class="container"><p class="footer-disclaimer">This site is a free service to assist homeowners in connecting with local service contractors. All contractors are independent and this site does not warrant or guarantee any work performed. It is the responsibility of the homeowner to verify that the hired contractor furnishes the necessary license and insurance required for the work being performed. All persons depicted in a photo or video are actors or models and not contractors listed on this site.</p></div>
   <div class="container"><div class="footer-bottom"><span>© 2026 Chula Vista Restoration Co. All rights reserved.</span><span>Chula Vista, California, United States</span></div></div>
 </footer>
 
-<a id="mobile-cta" href="tel:+16195550100" aria-label="Call us now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.15 12 19.79 19.79 0 011.1 3.18 2 2 0 013.1 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>Call Now — +1 (619) 555-0100</a>
+<a id="mobile-cta" href="tel:+16195550100" aria-label="Call us now"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.15 12 19.79 19.79 0 011.1 3.18 2 2 0 013.1 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>Call Now: +1 (619) 555-0100</a>
 
 <script>
   function toggleMenu(btn){var m=document.getElementById('mobile-nav');m.classList.toggle('open');btn.setAttribute('aria-expanded',String(m.classList.contains('open')));}
